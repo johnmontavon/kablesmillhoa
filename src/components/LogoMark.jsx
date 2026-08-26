@@ -102,6 +102,7 @@ export default function LogoMark({
   }, [interactive, wheelAnchor.x, wheelAnchor.y]);
 
   // Slow baseline auto-spin (kept)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const prefersReduced =
       typeof window !== "undefined" &&
@@ -130,9 +131,10 @@ export default function LogoMark({
   }, [autoSpin, autoSpinDurationSec]);
 
   // Re-apply transform when cumulative scroll angle changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     applyTransform();
-  }, [scrollAngle]);
+  }, [scrollAngle]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Note the last time scroll updated so we can temporarily ignore pointer input
   useEffect(() => {

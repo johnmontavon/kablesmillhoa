@@ -20,7 +20,6 @@ function Layout({ children }) {
   const bgRef = useRef(null);
   const buttonContainerRef = useRef(null);
 
-  const [isFloating, setIsFloating] = useState(true);
 
   // ---- Smooth programmatic scroll (kept yours) ----
   const handleNavClick = (path) => {
@@ -38,7 +37,6 @@ function Layout({ children }) {
 
       if (window.scrollY >= targetY) return;
 
-      setIsFloating(false);
 
       animate(window.scrollY, targetY, {
         duration: 1,
@@ -49,7 +47,6 @@ function Layout({ children }) {
             bgRef.current.style.transform = `translateY(${(window.scrollY - targetY) * 0.1}px)`;
           }
         },
-        onComplete: () => setIsFloating(true),
       });
     }, 50);
   };

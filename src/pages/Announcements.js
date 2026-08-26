@@ -1,16 +1,9 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 
 // ---------- helpers ----------
 
-// VERY LIGHT auth for static site MVP — 
-// (We'll replace with Supabase/Firebase later.)
-const USERS = {
-  jb: "3192",
-  su: "3099",
-  jm: "3241"
-};
 
 // Parse 'YYYY-MM-DD' as a LOCAL date (no timezone shift)
 const parseYMD = (s) => {
