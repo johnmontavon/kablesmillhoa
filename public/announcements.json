@@ -1,0 +1,42 @@
+[
+    {
+        "id": "2025-11-12-annual-meeting",
+        "title": "Annual Meeting — Bellbrook Middle School, 11/12/2025 @ 7:00 PM",
+        "date": "2025-11-12",
+        "pinned": true,
+        "pinned_until": "2025-11-13",
+        "author": "board",
+        "body": "Please join us at Bellbrook Middle School at 7:00 PM for the annual HOA meeting.",
+        "attachments": [
+          { "label": "2024 Meeting Minutes", "url": "/docs/2024-Annual-Meeting-Minutes.jpg" },
+          { "label": "2025 Annual Meeting Letter", "url": "/docs/11.2025-Meeting-Letter.jpg" },
+          { "label": "Proxy Form", "url": "/docs/11.25-Meeting-Proxy-Form.jpg" },
+          { "label": "2025 Agenda", "url": "/docs/km-2025-annual-agena.pdf" },
+          { "label": "2025 Slides", "url": "/docs/km-2025-presentation.pptx" }
+        ]
+      },
+    {
+      "id": "NewDesign",
+      "title": "Site Redesign is Now Live",
+      "date": "2025-11-11",
+      "pinned": false,
+      "pinned_until": "",
+      "author": "jm",
+      "body": "The new website is now live.  Further updates and enhancements are underway...",
+      "attachments": []
+    },
+    {
+        "id": "FlockSafetyCamsInstalled",
+        "title": "Flock Safety Cameras Installed",
+        "date": "2025-06-03",
+        "pinned": false,
+        "pinned_until": "",
+        "author": "board",
+        "body": "Flock Safety (license plate) cameras have been installed at each entrance to Kable's Mill. They are accessible by Sugarcreek PD. This addition serves as another proactive measure to enhance the security and well-being of our community.",
+        "attachments": [
+            { "label": "Flock Safety", "url": "https://www.flocksafety.com/products/license-plate-readers" }
+        ]
+      }
+    
+  ]
+  

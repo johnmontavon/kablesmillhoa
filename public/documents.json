@@ -1,0 +1,40 @@
+{
+    "categories": {
+      "covenants": {
+        "label": "Covenants & Restrictions",
+        "items": [
+          {
+            "title": "Covenants & Restrictions (Recorded 2012)",
+            "date": "2012-05-01",
+            "url": "/docs/covenants/COVENANTSANDRESTRICTIONS.pdf"
+          }
+        ]
+      },
+      "minutes": {
+        "label": "Meeting Minutes",
+        "items": [
+          {
+            "title": "Annual Meeting 2024 Minutes",
+            "date": "2024-11-12",
+            "url": "/docs/minutes/2024-Annual-Meeting-Minutes.jpg"
+          }
+        ]
+      },
+      "financials": {
+        "label": "Financial Reports",
+        "items": [
+          {
+            "title": "2025 Projection 2026",
+            "date": "2025-11-10",
+            "url": "/docs/financials/12_Month_Projection_2025_2026.xlsx"
+          },
+          {
+            "title": "September 2025 Financials",
+            "date": "2025-10-01",
+            "url": "/docs/financials/9.2025_Financials_9494.pdf"
+          }
+        ]
+      }
+    }
+  }
+  
