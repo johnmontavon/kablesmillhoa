@@ -128,7 +128,7 @@ export default function LogoMark({
       rafSpinRef.current = 0;
       lastTsRef.current = 0;
     };
-  }, [autoSpin, autoSpinDurationSec]);
+  }, [autoSpin, autoSpinDurationSec]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Re-apply transform when cumulative scroll angle changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
