@@ -30,8 +30,8 @@ export default function About() {
           </ul>
           <div className="mt-3 text-sm">
             Email:{" "}
-            <a className="underline" href="mailto:johnmontavon@gmail.com">
-              board@kablesmill.com
+            <a className="underline" href="mailto:hoa-board@agentmail.to">
+              hoa-board@agentmail.to
             </a>
           </div>
         </section>

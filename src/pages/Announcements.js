@@ -42,8 +42,47 @@ const makePreview = (body) => {
   return firstLine.length > 160 ? firstLine.slice(0, 160) + "…" : firstLine;
 };
 
+const linkifyParts = (text) => {
+  if (!text) return [];
+  const urlRe = /(https?:\/\/[^\s]+)/g;
+  const parts = [];
+  let last = 0;
+  let m;
+  while ((m = urlRe.exec(text)) !== null) {
+    if (m.index > last) parts.push({ type: "text", value: text.slice(last, m.index) });
+    let url = m[1];
+    // Trim common trailing punctuation from URLs
+    let trailing = "";
+    while (url && /[.,);:\]]$/.test(url)) {
+      trailing = url.slice(-1) + trailing;
+      url = url.slice(0, -1);
+    }
+    parts.push({ type: "link", value: url });
+    if (trailing) parts.push({ type: "text", value: trailing });
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push({ type: "text", value: text.slice(last) });
+  return parts;
+};
+
 const BodyText = ({ text }) => (
-  <div className="text-white/90 whitespace-pre-wrap leading-relaxed">{text}</div>
+  <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
+    {linkifyParts(text).map((part, i) =>
+      part.type === "link" ? (
+        <a
+          key={i}
+          href={part.value}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline text-white hover:text-white/90 break-words"
+        >
+          {part.value}
+        </a>
+      ) : (
+        <span key={i}>{part.value}</span>
+      )
+    )}
+  </div>
 );
 
 // >>> REPLACED: AttachmentList now renders a bulleted list <<<
@@ -100,7 +139,7 @@ function AnnouncementItem({ item, expanded, onToggle, onPermalink }) {
           </div>
           <h3 className="text-lg md:text-xl font-semibold text-white">{item.title}</h3>
           {!expanded && (
-            <p className="text-sm text-white/80 mt-1">{makePreview(item.body)}</p>
+            <p className="text-sm text-white/80 mt-1">{item.summary || makePreview(item.body)}</p>
           )}
         </div>
         <span
@@ -185,6 +224,7 @@ export default function Announcements() {
     if (!q) return base;
     return base.filter(x =>
       (x.title || "").toLowerCase().includes(q) ||
+      (x.summary || "").toLowerCase().includes(q) ||
       (x.body || "").toLowerCase().includes(q)
     );
   }, [items, query]);

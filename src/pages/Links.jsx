@@ -107,7 +107,7 @@ export default function Links() {
 
       <div className="mt-8 text-white/80 text-sm">
         Missing something?{" "}
-        <a className="underline" href="mailto:JohnMontavon@gmail.com">
+        <a className="underline" href="mailto:hoa-board@agentmail.to">
           Email the board
         </a>
         .

@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Optional Google Analytics (GA4)
+
+Set `REACT_APP_GA_MEASUREMENT_ID` (e.g. in Netlify env vars) to inject gtag. If unset, analytics is a no-op.
+
 ## Available Scripts
 
 In the project directory, you can run:
