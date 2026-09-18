@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -120,8 +120,61 @@ function PinnedBadge({ item }) {
   return null;
 }
 
+const EMPTY_RX = { likes: 0, loves: 0, likedByMe: false, lovedByMe: false };
 
-function AnnouncementItem({ item, expanded, onToggle, onPermalink }) {
+function ReactionBar({ announcementId, reaction, onToggle, busy }) {
+  const rx = reaction || EMPTY_RX;
+  return (
+    <div className="mt-3 flex items-center gap-2" role="group" aria-label="Reactions">
+      <button
+        type="button"
+        disabled={busy}
+        aria-pressed={!!rx.likedByMe}
+        aria-label={rx.likedByMe ? "Remove like" : "Like this announcement"}
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle(announcementId, "like");
+        }}
+        className={[
+          "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm border transition",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7fd4c8]",
+          rx.likedByMe
+            ? "bg-[#256C63] border-[#3d9a8d] text-white shadow-sm"
+            : "bg-white/10 border-white/20 text-white/90 hover:bg-white/15 hover:border-white/30",
+          busy ? "opacity-60 cursor-wait" : "cursor-pointer",
+        ].join(" ")}
+      >
+        <span aria-hidden="true">👍</span>
+        <span className="font-medium tabular-nums">{rx.likes}</span>
+        <span className="sr-only">likes</span>
+      </button>
+      <button
+        type="button"
+        disabled={busy}
+        aria-pressed={!!rx.lovedByMe}
+        aria-label={rx.lovedByMe ? "Remove love" : "Love this announcement"}
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle(announcementId, "love");
+        }}
+        className={[
+          "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm border transition",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7fd4c8]",
+          rx.lovedByMe
+            ? "bg-[#c45c6a] border-[#e07a88] text-white shadow-sm"
+            : "bg-white/10 border-white/20 text-white/90 hover:bg-white/15 hover:border-white/30",
+          busy ? "opacity-60 cursor-wait" : "cursor-pointer",
+        ].join(" ")}
+      >
+        <span aria-hidden="true">❤️</span>
+        <span className="font-medium tabular-nums">{rx.loves}</span>
+        <span className="sr-only">loves</span>
+      </button>
+    </div>
+  );
+}
+
+function AnnouncementItem({ item, expanded, onToggle, reaction, onReactionToggle, reactionBusy }) {
   return (
     <div className="rounded-xl bg-white/10 border border-white/10 shadow p-4">
       <button
@@ -151,6 +204,13 @@ function AnnouncementItem({ item, expanded, onToggle, onPermalink }) {
           {expanded ? "Hide" : "View"}
         </span>
       </button>
+
+      <ReactionBar
+        announcementId={item.id}
+        reaction={reaction}
+        onToggle={onReactionToggle}
+        busy={reactionBusy}
+      />
 
       <AnimatePresence initial={false}>
         {expanded && (
@@ -201,6 +261,8 @@ export default function Announcements() {
   const [openId, setOpenId] = useState(null);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [reactions, setReactions] = useState({});
+  const [busyId, setBusyId] = useState(null);
   const { id: routeId } = useParams();
   const navigate = useNavigate();
 
@@ -211,6 +273,17 @@ export default function Announcements() {
       .then(t => setItems(tryParse(t, [])))
       .catch(() => setItems([]))
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    fetch("/.netlify/functions/reactions", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data && data.announcements) setReactions(data.announcements);
+      })
+      .catch(() => {
+        /* function may be unavailable in plain CRA start */
+      });
   }, []);
 
   // open the permalinked item if present
@@ -233,6 +306,40 @@ export default function Announcements() {
     setOpenId(expandedNext ? id : null);
     navigate(expandedNext ? `/announcements/${id}` : `/announcements`);
   };
+
+  const onReactionToggle = useCallback(async (announcementId, reaction) => {
+    const current = reactions[announcementId] || EMPTY_RX;
+    const mine = reaction === "like" ? current.likedByMe : current.lovedByMe;
+    const op = mine ? "remove" : "add";
+    const countKey = reaction === "like" ? "likes" : "loves";
+    const meKey = reaction === "like" ? "likedByMe" : "lovedByMe";
+
+    const previous = { ...reactions };
+    const optimistic = {
+      ...current,
+      [meKey]: !mine,
+      [countKey]: Math.max(0, (current[countKey] || 0) + (mine ? -1 : 1)),
+    };
+    setReactions((prev) => ({ ...prev, [announcementId]: optimistic }));
+    setBusyId(announcementId);
+
+    try {
+      const res = await fetch("/.netlify/functions/reactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ announcementId, reaction, op }),
+      });
+      if (!res.ok) throw new Error("reaction failed");
+      const data = await res.json();
+      if (data && data.announcements) {
+        setReactions((prev) => ({ ...prev, ...data.announcements }));
+      }
+    } catch {
+      setReactions(previous);
+    } finally {
+      setBusyId(null);
+    }
+  }, [reactions]);
 
   const openedItem = routeId && !loading
     ? items.find(x => x.id === routeId)
@@ -268,7 +375,9 @@ export default function Announcements() {
               item={item}
               expanded={openId === item.id}
               onToggle={() => onToggle(item.id, openId !== item.id)}
-              onPermalink={() => navigate(`/announcements/${item.id}`)}
+              reaction={reactions[item.id]}
+              onReactionToggle={onReactionToggle}
+              reactionBusy={busyId === item.id}
             />
           ))}
         </div>
