@@ -53,7 +53,7 @@ function Layout({ children }) {
 
   const isButtonsInView = useInView(buttonContainerRef, {
     once: true,
-    margin: "-100px",
+    amount: 0.1,
   });
 
   // ---- Continuous, additive scroll-linked rotation ----
@@ -108,9 +108,10 @@ function Layout({ children }) {
     };
   }, []);
 
-  // Mobile performance hint
+  // Mobile performance hint. Do NOT use size containment here: it pins the hero
+  // to its min-height and clips the nav buttons on short phone screens.
   useEffect(() => {
-    if (heroRef.current) heroRef.current.style.contain = "layout paint size style";
+    if (heroRef.current) heroRef.current.style.contain = "layout paint";
   }, []);
 
   return (
@@ -123,7 +124,7 @@ function Layout({ children }) {
           relative w-full overflow-hidden text-white
           min-h-[80svh] md:min-h-[92vh] xl:min-h-[96vh]
           flex flex-col justify-start items-center
-          pt-32 md:pt-0
+          pt-32 pb-10 md:pt-0 md:pb-0
         "
         aria-label="Hero"
         style={{

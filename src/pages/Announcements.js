@@ -347,11 +347,11 @@ export default function Announcements() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-bold text-white">Announcements</h1>
         <input
           placeholder="Search…"
-          className="rounded-md px-3 py-2 bg-white/10 text-white outline-none w-56"
+          className="rounded-md px-3 py-2 bg-white/10 text-white outline-none w-full sm:w-56 text-base"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
