@@ -29,7 +29,13 @@ export default function About() {
             <li>Member at Large — <span className="opacity-70">John Montavon</span></li>
           </ul>
           <div className="mt-3 text-sm">
-            Email:{" "}
+            Property Manager — Leslie Backus, Towne Properties:{" "}
+            <a className="underline" href="mailto:LeslieBackus@towneproperties.com">
+              LeslieBackus@towneproperties.com
+            </a>
+          </div>
+          <div className="mt-3 text-sm">
+            Board email:{" "}
             <a className="underline" href="mailto:hoa-board@agentmail.to">
               hoa-board@agentmail.to
             </a>
